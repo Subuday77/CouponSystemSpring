@@ -2,6 +2,7 @@ package com.couponsystem.CouponSystemSpring.rest;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import com.fasterxml.jackson.core.sym.Name;
 @RestController
 @RequestMapping("/company")
 
-public class CompanyController extends ClientController {
+public class CompanyController {
 
 	@Autowired
 	SystemDAO systemDAO;
@@ -34,18 +35,24 @@ public class CompanyController extends ClientController {
 	Help help;
 
 	@PostMapping("/addcoupon")
-	public ResponseEntity<?> addCoupon(@RequestBody Coupon coupon) {
+	public ResponseEntity<?> addCoupon(@RequestBody Coupon coupon, @RequestParam (name="token") UUID token) {
+		
 		Optional<Company> existingCompany = systemDAO.findCompanyById(coupon.getCompanyId());
-
+		if (!help.allowed(token, existingCompany.get().getId())) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		if (existingCompany.isPresent()) {
 			if (help.isUnique(coupon)) {
 				systemDAO.addCoupon(coupon);
 				systemDAO.findCompanyById(coupon.getCompanyId()).get().getCoupons().add(coupon);
 				systemDAO.addCompany(systemDAO.findCompanyById(coupon.getCompanyId()).get());
+				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Coupon with id="+coupon.getId()+" was added", HttpStatus.OK);
 			}
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>("Such coupon already exists", HttpStatus.IM_USED);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("No such company", HttpStatus.BAD_REQUEST);
 	}
 

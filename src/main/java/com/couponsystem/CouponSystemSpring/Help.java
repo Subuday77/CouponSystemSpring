@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import com.couponsystem.CouponSystemSpring.beans.Company;
 import com.couponsystem.CouponSystemSpring.beans.Coupon;
 import com.couponsystem.CouponSystemSpring.beans.Customer;
+import com.couponsystem.CouponSystemSpring.beans.Login;
+import com.couponsystem.CouponSystemSpring.dao.LoginDAO;
 import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
 import com.couponsystem.CouponSystemSpring.repo.CompanyRepo;
 
@@ -21,6 +23,8 @@ public class Help {
 
 	@Autowired
 	SystemDAO systemDAO;
+	@Autowired
+	LoginDAO loginDAO;
 
 	public static String getUUID() {
 		return String.valueOf(UUID.randomUUID());
@@ -335,4 +339,46 @@ public class Help {
 		return false;
 	}
 
+	public boolean isValid(String email, String password, int type) {
+
+		switch (type) {
+		case 1:
+			ArrayList<Company> allCompanies = (ArrayList<Company>) systemDAO.getAllCompanies();
+			for (Company company : allCompanies) {
+				if (company.getEmail().equalsIgnoreCase(email)) {
+					if (company.getPassword().equals(password)) {
+						return true;
+					}
+				}
+			}
+			return false;
+
+		case 2:
+			ArrayList<Customer> allCustomers = (ArrayList<Customer>) systemDAO.getAllCustomers();
+			for (Customer customer : allCustomers) {
+				if (customer.getEmail().equalsIgnoreCase(email)) {
+					if (customer.getPassword().equals(password)) {
+						return true;
+					}
+				}
+			}
+			return false;
+
+		default:
+			return false;
+		}
+	}
+
+	public boolean allowed(UUID token, long id) {
+		if (loginDAO.findLoginByToken(token).isEmpty()) {
+			return false;
+		}
+		return (loginDAO.findLoginByToken(token).get().getSubjectId() == id);
+	}
+
+	public void updateTimestamp(UUID token) {
+		Optional<Login> login = loginDAO.findLoginByToken(token);
+		login.get().setTimestamp(System.currentTimeMillis());
+		loginDAO.addLogin(login.get());
+	}
 }

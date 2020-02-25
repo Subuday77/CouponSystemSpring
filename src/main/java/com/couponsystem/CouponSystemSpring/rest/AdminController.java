@@ -25,7 +25,7 @@ import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController extends ClientController {
+public class AdminController {
 
 	@Autowired
 	SystemDAO systemDAO;
@@ -208,7 +208,8 @@ public class AdminController extends ClientController {
 	}
 
 	@DeleteMapping("/cleanup")
-	public ResponseEntity<?> deleteOutdatedCoupons() {
+	public synchronized ResponseEntity<?> deleteOutdatedCoupons() {
+		System.out.println(Thread.currentThread());
 		ArrayList<Customer> allCustomers = (ArrayList<Customer>) systemDAO.getAllCustomers();
 		ArrayList<Coupon> allCoupons = (ArrayList<Coupon>) systemDAO.getAllCoupons();
 		ArrayList<Coupon> outdatedCoupons = new ArrayList<Coupon>();

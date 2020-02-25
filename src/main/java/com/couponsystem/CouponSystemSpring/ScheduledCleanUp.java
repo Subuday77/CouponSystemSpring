@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 
 import com.couponsystem.CouponSystemSpring.beans.Company;
 import com.couponsystem.CouponSystemSpring.beans.Coupon;
+import com.couponsystem.CouponSystemSpring.beans.Login;
+import com.couponsystem.CouponSystemSpring.dao.LoginDAO;
 import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
+import com.couponsystem.CouponSystemSpring.repo.LoginRepo;
 import com.couponsystem.CouponSystemSpring.rest.AdminController;
 
 @Component
@@ -23,12 +26,21 @@ public class ScheduledCleanUp {
 	@Autowired
 	SystemDAO systemDAO;
 	@Autowired
+	LoginDAO loginDAO;
+	@Autowired
 	AdminController adminController;
 
 	@Async
-	@Scheduled(fixedRate = 1000*60*2)
+	@Scheduled(fixedRate = 1000*60)
 	public void cleanUp() throws InterruptedException {
-	//	 adminController.deleteOutdatedCoupons();
+		
+		for (Login login : loginDAO.getAllLogins()) {
+			if (login.getTimestamp()<System.currentTimeMillis()-(1000*60*30)) {
+				loginDAO.removeLogin(login);
+			}
+		}
+		
+	// adminController.deleteOutdatedCoupons();
 		
 //		List<Company> allCompanies = (List<Company>) systemDAO.getAllCompanies();
 //		for (Company company : allCompanies) {

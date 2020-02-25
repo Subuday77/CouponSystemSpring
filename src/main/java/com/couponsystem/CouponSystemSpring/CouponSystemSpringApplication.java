@@ -11,6 +11,7 @@ import com.couponsystem.CouponSystemSpring.rest.AdminController;
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableScheduling
+
 public class CouponSystemSpringApplication {
 
 	public static void main(String[] args) throws InterruptedException {
