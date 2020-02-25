@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,70 +36,100 @@ public class AdminController {
 	// Companies
 
 	@PostMapping("/addcompany")
-	public ResponseEntity<?> addCompany(@RequestBody Company company) {
+	public ResponseEntity<?> addCompany(@RequestBody Company company, @RequestParam(name = "token") UUID token) {
 
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		if (help.isUnique(company)) {
 			systemDAO.addCompany(company);
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>("Company with id=" + company.getId() + " was added", HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Name or Email already in use", HttpStatus.IM_USED);
 	}
 
 	@GetMapping("/getcompanybyid")
-	public ResponseEntity<?> findCompanyById(@RequestParam(name = "id") long id) {
+	public ResponseEntity<?> findCompanyById(@RequestParam(name = "id") long id,
+			@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Company> existingCompany = systemDAO.findCompanyById(id);
 		if (existingCompany.isPresent()) {
+			help.updateTimestamp(token);
 			return new ResponseEntity<Company>(systemDAO.findCompanyById(id).get(), HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Company with id " + id + " not found.", HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/getcompany")
 	public ResponseEntity<?> findCompanyByString(@RequestParam(name = "name") String name,
-			@RequestParam(name = "email") String email, @RequestParam(name = "uid") String uid) {
+			@RequestParam(name = "email") String email, @RequestParam(name = "uid") String uid, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Company> existingCompany = systemDAO.findCompanyByString(name, email, uid);
 		if (existingCompany.isPresent()) {
+			help.updateTimestamp(token);
 			return new ResponseEntity<Company>(systemDAO.findCompanyByString(name, email, uid).get(), HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Company not found.", HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/name")
-	public ResponseEntity<?> findCompanyByName(@RequestParam(name = "name") String name) {
-
+	public ResponseEntity<?> findCompanyByName(@RequestParam(name = "name") String name, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Company> existingCompany = systemDAO.findCompanyByName(name);
 
 		if (existingCompany.isEmpty()) {
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>("Company not found.", HttpStatus.BAD_REQUEST);
 		}
-
+		help.updateTimestamp(token);
 		return new ResponseEntity<Optional<Company>>(systemDAO.findCompanyByName(name), HttpStatus.OK);
 	}
 
 	@PutMapping("/updatecompany")
-	public ResponseEntity<?> updateCompany(@RequestBody Company company) {
-
+	public ResponseEntity<?> updateCompany(@RequestBody Company company, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Company> existingCompany = systemDAO.findCompanyById(company.getId());
 		if (existingCompany.isPresent()) {
 			if (help.isUnique(company)) {
 				systemDAO.addCompany(Help.compareFieldsCompany(existingCompany, company));
-
+				help.updateTimestamp(token);
 				return new ResponseEntity<String>(
 						"Company " + existingCompany.get().getName() + " (id=" + company.getId() + ")" + " updated",
 						HttpStatus.OK);
 			}
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>("Name or Email already in use", HttpStatus.IM_USED);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Company with id " + company.getId() + " not found.", HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/getallcompanies")
-	public ResponseEntity<?> getAllCompanies() {
+	public ResponseEntity<?> getAllCompanies(@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Company>>((ArrayList<Company>) systemDAO.getAllCompanies(), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/deletecompany")
-	public ResponseEntity<?> deleteCompany(@RequestBody Company company) {
+	public ResponseEntity<?> deleteCompany(@RequestBody Company company, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Company> existingCompany = systemDAO.findCompanyById(company.getId());
 		long id = company.getId();
 		if (company.getId() > 0 && existingCompany.isPresent()) {
@@ -125,91 +156,127 @@ public class AdminController {
 			}
 			existingCompany = systemDAO.findCompanyById(company.getId());
 			if (!existingCompany.isPresent()) {
+				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Company (id=" + id + ") was deleted", HttpStatus.OK);
 			}
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Something went wrong.", HttpStatus.EXPECTATION_FAILED);
 	}
 
 	// Customers
 
 	@GetMapping("/getcustomerbyid")
-	public ResponseEntity<?> findCustomerById(@RequestParam(name = "id") long id) {
+	public ResponseEntity<?> findCustomerById(@RequestParam(name = "id") long id, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Customer> existingCustomer = systemDAO.findCustomerById(id);
 		if (existingCustomer.isPresent()) {
+			help.updateTimestamp(token);
 			return new ResponseEntity<Customer>(systemDAO.findCustomerById(id).get(), HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Customer with id " + id + " not found.", HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/getcustomers")
 	public ResponseEntity<?> findCustomersByString(@RequestParam(name = "firstname") String firstName,
 			@RequestParam(name = "lastname") String lastName, @RequestParam(name = "email") String email,
-			@RequestParam(name = "uid") String uid) {
+			@RequestParam(name = "uid") String uid, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		ArrayList<Customer> existingCustomers = systemDAO.findCustomerByString(firstName, lastName, email, uid);
 		if (!existingCustomers.isEmpty()) {
+			help.updateTimestamp(token);
 			return new ResponseEntity<ArrayList<Customer>>(
 					systemDAO.findCustomerByString(firstName, lastName, email, uid), HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Customer(s) not found.", HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/getallcustomers")
-	public ResponseEntity<?> getAllCustomers() {
+	public ResponseEntity<?> getAllCustomers(@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Customer>>((ArrayList<Customer>) systemDAO.getAllCustomers(),
 				HttpStatus.OK);
 	}
 
 	@PostMapping("/addcustomer")
-	public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
-
+	public ResponseEntity<?> addCustomer(@RequestBody Customer customer, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		if (help.isUnique(customer)) {
 			systemDAO.addCustomer(customer);
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>("OK", HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Email already in use", HttpStatus.IM_USED);
 	}
 
 	@PutMapping("/updatecustomer")
-	public ResponseEntity<?> updateCustomer(@RequestBody Customer customer) {
-
+	public ResponseEntity<?> updateCustomer(@RequestBody Customer customer, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Customer> existingCustomer = systemDAO.findCustomerById(customer.getId());
 		if (existingCustomer.isPresent()) {
 			if (help.isUnique(customer)) {
 				systemDAO.addCustomer(Help.compareFieldsCustomer(existingCustomer, customer));
-
+				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Customer " + existingCustomer.get().getLastName() + " (id="
 						+ customer.getId() + ")" + " updated", HttpStatus.OK);
 			}
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>("Email already in use", HttpStatus.IM_USED);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Customer with id " + customer.getId() + " not found.",
 				HttpStatus.BAD_REQUEST);
 	}
 
 	@DeleteMapping("/deletecustomer")
-	public ResponseEntity<?> deleteCustomer(@RequestBody Customer customer) {
+	public ResponseEntity<?> deleteCustomer(@RequestBody Customer customer, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Customer> existingCustomer = systemDAO.findCustomerById(customer.getId());
 		long id = customer.getId();
 		if (customer.getId() > 0 && existingCustomer.isPresent()) {
 			systemDAO.deleteCustomer(customer);
 			existingCustomer = systemDAO.findCustomerById(customer.getId());
 			if (existingCustomer.isEmpty()) {
+				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Customer(id=" + id + ") was deleted", HttpStatus.OK);
 			}
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Something went wrong.", HttpStatus.EXPECTATION_FAILED);
 	}
 
 	// Coupons
 	@GetMapping("/getallcoupons")
-	public ResponseEntity<?> getAllCouponsEntity() {
+	public ResponseEntity<?> getAllCouponsEntity(@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Coupon>>((ArrayList<Coupon>) systemDAO.getAllCoupons(), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/cleanup")
-	public synchronized ResponseEntity<?> deleteOutdatedCoupons() {
-		System.out.println(Thread.currentThread());
+	public synchronized ResponseEntity<?> deleteOutdatedCoupons(@RequestParam(name = "token") UUID token) {
+		
+		if (!help.allowed(token, 0)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		ArrayList<Customer> allCustomers = (ArrayList<Customer>) systemDAO.getAllCustomers();
 		ArrayList<Coupon> allCoupons = (ArrayList<Coupon>) systemDAO.getAllCoupons();
 		ArrayList<Coupon> outdatedCoupons = new ArrayList<Coupon>();
@@ -235,8 +302,10 @@ public class AdminController {
 			for (Coupon c : outdatedCoupons) {
 				systemDAO.deleteCoupon(c);
 			}
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>("Outdated coupons were deleted", HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("There were no outdated coupons", HttpStatus.GONE);
 	}
 

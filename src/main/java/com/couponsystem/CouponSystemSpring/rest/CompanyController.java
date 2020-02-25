@@ -35,8 +35,8 @@ public class CompanyController {
 	Help help;
 
 	@PostMapping("/addcoupon")
-	public ResponseEntity<?> addCoupon(@RequestBody Coupon coupon, @RequestParam (name="token") UUID token) {
-		
+	public ResponseEntity<?> addCoupon(@RequestBody Coupon coupon, @RequestParam(name = "token") UUID token) {
+
 		Optional<Company> existingCompany = systemDAO.findCompanyById(coupon.getCompanyId());
 		if (!help.allowed(token, existingCompany.get().getId())) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
@@ -47,7 +47,7 @@ public class CompanyController {
 				systemDAO.findCompanyById(coupon.getCompanyId()).get().getCoupons().add(coupon);
 				systemDAO.addCompany(systemDAO.findCompanyById(coupon.getCompanyId()).get());
 				help.updateTimestamp(token);
-				return new ResponseEntity<String>("Coupon with id="+coupon.getId()+" was added", HttpStatus.OK);
+				return new ResponseEntity<String>("Coupon with id=" + coupon.getId() + " was added", HttpStatus.OK);
 			}
 			help.updateTimestamp(token);
 			return new ResponseEntity<String>("Such coupon already exists", HttpStatus.IM_USED);
@@ -57,29 +57,42 @@ public class CompanyController {
 	}
 
 	@GetMapping("/findcouponsbycompanyid")
-	public ResponseEntity<?> getCompanyCoupons(@RequestParam(name = "id") long id) {
-
+	public ResponseEntity<?> getCompanyCoupons(@RequestParam(name = "id") long id,
+			@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, id)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Coupon>>(systemDAO.findCouponsByCompanyId(id), HttpStatus.OK);
 	}
 
 	@PutMapping("/updatecoupon")
-	public ResponseEntity<?> updateCoupon(@RequestBody Coupon coupon) {
+	public ResponseEntity<?> updateCoupon(@RequestBody Coupon coupon, @RequestParam(name = "token") UUID token) {
 		Optional<Coupon> existingCoupon = systemDAO.findCouponById(coupon.getId());
+		if (!help.allowed(token, existingCoupon.get().getCompanyId())) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		if (existingCoupon.isPresent()) {
 			if (help.isUnique(coupon)) {
 				systemDAO.addCoupon(Help.compareFieldsCoupon(existingCoupon, coupon));
+				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Coupon " + existingCoupon.get().getId() + " was updated",
 						HttpStatus.OK);
 			}
+			help.updateTimestamp(token);
 			return new ResponseEntity<String>(
 					"Coupon with title *" + existingCoupon.get().getTitle() + "* already exists.", HttpStatus.IM_USED);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("No such coupon", HttpStatus.BAD_REQUEST);
 	}
 
 	@DeleteMapping("/deletecoupon")
-	public ResponseEntity<?> deleteCoupon(@RequestBody Coupon coupon) {
+	public ResponseEntity<?> deleteCoupon(@RequestBody Coupon coupon, @RequestParam(name = "token") UUID token) {
 		Optional<Coupon> existingCoupon = systemDAO.findCouponById(coupon.getId());
+		if (!help.allowed(token, existingCoupon.get().getCompanyId())) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		long id = coupon.getId();
 		if (coupon.getId() > 0 && existingCoupon.isPresent()) {
 			Optional<Company> company = systemDAO.findCompanyById(existingCoupon.get().getCompanyId());
@@ -96,15 +109,21 @@ public class CompanyController {
 			systemDAO.deleteCoupon(coupon);
 			existingCoupon = systemDAO.findCouponById(coupon.getId());
 			if (existingCoupon.isEmpty()) {
+				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Coupon (id=" + id + ") was deleted", HttpStatus.OK);
 			}
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Something went wrong.", HttpStatus.EXPECTATION_FAILED);
 	}
 
 	@GetMapping("/findcouponsbycategory")
 	public ResponseEntity<?> getCompanyCouponsByCategory(@RequestParam(name = "category") Category category,
-			@RequestParam(name = "companyid") long companyId) {
+			@RequestParam(name = "companyid") long companyId, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, companyId)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Coupon>>(
 				(ArrayList<Coupon>) systemDAO.findCouponsByCategoryAndCompanyId(category, companyId), HttpStatus.OK);
 
@@ -112,18 +131,28 @@ public class CompanyController {
 
 	@GetMapping("/findcouponsbyprice")
 	public ResponseEntity<?> getCompanyCouponsByPrice(@RequestParam(name = "price") double price,
-			@RequestParam(name = "companyid") long companyId) {
+			@RequestParam(name = "companyid") long companyId, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, companyId)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Coupon>>(
 				(ArrayList<Coupon>) systemDAO.findCouponsByPriceAndCompanyId(price, companyId), HttpStatus.OK);
 
 	}
 
 	@GetMapping("/getcompanybyid")
-	public ResponseEntity<?> findCompanyById(@RequestParam(name = "id") long id) {
+	public ResponseEntity<?> findCompanyById(@RequestParam(name = "id") long id,
+			@RequestParam(name = "token") UUID token) {
 		Optional<Company> existingCompany = systemDAO.findCompanyById(id);
+		if (!help.allowed(token, existingCompany.get().getId())) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
 		if (existingCompany.isPresent()) {
+			help.updateTimestamp(token);
 			return new ResponseEntity<Company>(systemDAO.findCompanyById(id).get(), HttpStatus.OK);
 		}
+		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Company with id " + id + " not found.", HttpStatus.BAD_REQUEST);
 	}
 }

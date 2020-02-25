@@ -18,6 +18,8 @@ import com.couponsystem.CouponSystemSpring.dao.LoginDAO;
 import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
 import com.couponsystem.CouponSystemSpring.repo.CompanyRepo;
 
+import net.bytebuddy.asm.Advice.Return;
+
 @Component
 public class Help {
 
@@ -342,6 +344,11 @@ public class Help {
 	public boolean isValid(String email, String password, int type) {
 
 		switch (type) {
+		case 0:
+			if (email.equalsIgnoreCase("admin@admin.com") && password.equals("admin"))
+				return true;
+
+			return false;
 		case 1:
 			ArrayList<Company> allCompanies = (ArrayList<Company>) systemDAO.getAllCompanies();
 			for (Company company : allCompanies) {
