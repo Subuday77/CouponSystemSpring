@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Old World\",\n    \"email\": \"ow@gmail.com\",\n    \"password\": \"2233\"\n}",
+							"raw": "{\n    \"name\": \"The Newest World\",\n    \"email\": \"tnw@gmail.com\",\n    \"password\": \"2233\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,7 +30,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/admin/addcompany",
+							"raw": "http://localhost:8080/admin/addcompany?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -39,6 +39,12 @@
 							"path": [
 								"admin",
 								"addcompany"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -58,7 +64,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 32,\n    \"name\":\"vera\",\n    \"email\": \"snakee@gmail.com\",\n    \"password\": \"555\"\n}",
+							"raw": "{\n    \"id\": 78,\n    \n    \"password\": \"5555\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -66,7 +72,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/admin/updatecompany",
+							"raw": "http://localhost:8080/admin/updatecompany?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -75,6 +81,12 @@
 							"path": [
 								"admin",
 								"updatecompany"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -94,7 +106,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 57\n   \n    \n}",
+							"raw": "{\n    \"id\": 68\n   \n    \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -102,7 +114,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/admin/deletecompany",
+							"raw": "http://localhost:8080/admin/deletecompany?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -111,6 +123,12 @@
 							"path": [
 								"admin",
 								"deletecompany"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -122,7 +140,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/getallcompanies",
+							"raw": "http://localhost:8080/admin/getallcompanies?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -131,6 +149,12 @@
 							"path": [
 								"admin",
 								"getallcompanies"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -142,7 +166,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/getcompanybyid?id=27",
+							"raw": "http://localhost:8080/admin/getcompanybyid?id=56&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -155,7 +179,11 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "27"
+									"value": "56"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -168,7 +196,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/getcompany?name=vera new&email=&uid=",
+							"raw": "http://localhost:8080/admin/getcompany?name=new world&email=&uid=&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -181,7 +209,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "vera new"
+									"value": "new world"
 								},
 								{
 									"key": "email",
@@ -190,6 +218,10 @@
 								{
 									"key": "uid",
 									"value": ""
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -218,7 +250,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/admin/addcustomer",
+							"raw": "http://localhost:8080/admin/addcustomer?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -227,6 +259,12 @@
 							"path": [
 								"admin",
 								"addcustomer"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -246,7 +284,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 30,\n    \"firstName\": \"Nikolay\",\n    \"email\":\"trava@gmail.com\"\n}",
+							"raw": "{\n    \"id\": 69,\n    \"firstName\": \"Nikolay\",\n    \"email\":\"trava@gmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -254,7 +292,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/admin/updatecustomer",
+							"raw": "http://localhost:8080/admin/updatecustomer?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -263,6 +301,12 @@
 							"path": [
 								"admin",
 								"updatecustomer"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -282,7 +326,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 55\n}",
+							"raw": "{\n    \"id\": 69\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -290,7 +334,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/admin/deletecustomer",
+							"raw": "http://localhost:8080/admin/deletecustomer?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -299,6 +343,12 @@
 							"path": [
 								"admin",
 								"deletecustomer"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -310,7 +360,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/getallcustomers",
+							"raw": "http://localhost:8080/admin/getallcustomers?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -319,6 +369,12 @@
 							"path": [
 								"admin",
 								"getallcustomers"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -330,7 +386,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/getcustomerbyid?id=35",
+							"raw": "http://localhost:8080/admin/getcustomerbyid?id=35&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -344,6 +400,10 @@
 								{
 									"key": "id",
 									"value": "35"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -356,7 +416,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/getcustomers?firstname=ivan&lastname=&email=&uid=",
+							"raw": "http://localhost:8080/admin/getcustomers?firstname=john&lastname=&email=&uid=&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -369,7 +429,7 @@
 							"query": [
 								{
 									"key": "firstname",
-									"value": "ivan"
+									"value": "john"
 								},
 								{
 									"key": "lastname",
@@ -382,6 +442,10 @@
 								{
 									"key": "uid",
 									"value": ""
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -394,7 +458,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/getallcoupons",
+							"raw": "http://localhost:8080/admin/getallcoupons?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -403,6 +467,38 @@
 							"path": [
 								"admin",
 								"getallcoupons"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Outdated Coupons",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/admin/cleanup?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"cleanup"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -451,7 +547,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"companyId\": 64,\n    \"title\": \"10% discount\",\n    \"description\": \"10% discount for all travels\",\n    \"startDate\": \"2020-01-15\",\n    \"endDate\": \"2020-02-28\",\n    \"amount\": 15,\n    \"price\": 60,\n    \"category\": \"Vacation\"\n}",
+							"raw": "{\n    \"companyId\": 56,\n    \"title\": \"40% discount\",\n    \"description\": \"40% discount for all travels\",\n    \"startDate\": \"2020-01-15\",\n    \"endDate\": \"2020-02-28\",\n    \"amount\": 15,\n    \"price\": 60,\n    \"category\": \"Vacation\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -459,7 +555,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/company/addcoupon",
+							"raw": "http://localhost:8080/company/addcoupon?token=63db746f-6a44-4a7c-ba92-0b50b91653c5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -468,6 +564,12 @@
 							"path": [
 								"company",
 								"addcoupon"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "63db746f-6a44-4a7c-ba92-0b50b91653c5"
+								}
 							]
 						}
 					},
@@ -479,7 +581,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/company/findcouponsbycompanyid?id=1",
+							"raw": "http://localhost:8080/company/findcouponsbycompanyid?id=64&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -492,7 +594,11 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "64"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -513,7 +619,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"id\":60,\n\t\"companyId\": 56,\n\t\"title\":\"50% discount\",\n    \"description\": \"50% discount for all dinners\",\n    \"startDate\": \"2020-01-15\",\n    \"endDate\": \"2020-02-28\",\n    \"amount\": 20,\n    \"price\": 22.5,\n    \"category\":\"Food\"\n   \n}",
+							"raw": "{\n\t\"id\":75,\n\t\"companyId\": 64,\n\t\"title\":\"50% discount\",\n    \"description\": \"50% discount for all dinners\",\n    \"startDate\": \"2020-01-15\",\n    \"endDate\": \"2020-02-15\",\n    \"amount\": 20,\n    \"price\": 22.5,\n    \"category\":\"Food\"\n   \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -521,7 +627,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/company/updatecoupon",
+							"raw": "http://localhost:8080/company/updatecoupon?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -530,6 +636,12 @@
 							"path": [
 								"company",
 								"updatecoupon"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -549,7 +661,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"id\":65\n}",
+							"raw": "{\n\t\"id\":70\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -557,7 +669,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/company/deletecoupon",
+							"raw": "http://localhost:8080/company/deletecoupon?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -566,6 +678,12 @@
 							"path": [
 								"company",
 								"deletecoupon"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
 							]
 						}
 					},
@@ -577,7 +695,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/company/findcouponsbycategory?category=Food&companyid=26",
+							"raw": "http://localhost:8080/company/findcouponsbycategory?category=Food&companyid=56&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -594,7 +712,11 @@
 								},
 								{
 									"key": "companyid",
-									"value": "26"
+									"value": "56"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -607,7 +729,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/company/findcouponsbyprice?price=22.5&companyid=26",
+							"raw": "http://localhost:8080/company/findcouponsbyprice?price=22.5&companyid=56&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -624,7 +746,11 @@
 								},
 								{
 									"key": "companyid",
-									"value": "26"
+									"value": "56"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -637,7 +763,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/company/getcompanybyid?id=52",
+							"raw": "http://localhost:8080/company/getcompanybyid?id=56&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -650,7 +776,11 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "52"
+									"value": "56"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -692,7 +822,7 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/customer/purchase?couponid=66&customerid=35",
+							"raw": "http://localhost:8080/customer/purchase?couponid=72&customerid=35&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -705,11 +835,15 @@
 							"query": [
 								{
 									"key": "couponid",
-									"value": "66"
+									"value": "72"
 								},
 								{
 									"key": "customerid",
 									"value": "35"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -722,7 +856,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/customer/getcoupons?id=35",
+							"raw": "http://localhost:8080/customer/getcoupons?id=35&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -736,6 +870,10 @@
 								{
 									"key": "id",
 									"value": "35"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -748,7 +886,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/customer/getcouponsbycategory?id=35&category=Food",
+							"raw": "http://localhost:8080/customer/getcouponsbycategory?id=35&category=Vacation&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -765,7 +903,11 @@
 								},
 								{
 									"key": "category",
-									"value": "Food"
+									"value": "Vacation"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -778,7 +920,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/customer/getcouponsbyprice?id=35&price=30",
+							"raw": "http://localhost:8080/customer/getcouponsbyprice?id=35&price=60&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -795,7 +937,11 @@
 								},
 								{
 									"key": "price",
-									"value": "30"
+									"value": "60"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -808,7 +954,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/customer/getcustomerbyid?id=35",
+							"raw": "http://localhost:8080/customer/getcustomerbyid?id=35&token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -822,6 +968,10 @@
 								{
 									"key": "id",
 									"value": "35"
+								},
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
 								}
 							]
 						}
@@ -845,6 +995,95 @@
 					"listen": "test",
 					"script": {
 						"id": "8671208c-0300-488b-ba4e-d7d0970377af",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Login Controller",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/login?email=admin@admin.com&password=admin&type=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "admin@admin.com"
+								},
+								{
+									"key": "password",
+									"value": "admin"
+								},
+								{
+									"key": "type",
+									"value": "0"
+								}
+							]
+						},
+						"description": "http://localhost:8080/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/login/logout?token=34c9b2b1-cdca-4857-bf0b-e47d1750592a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "34c9b2b1-cdca-4857-bf0b-e47d1750592a"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "http://localhost:8080/login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9f974ba4-01d8-4b1f-847e-05c79587044a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7238a3a-85be-4a2d-b109-3b59d4f0a50e",
 						"type": "text/javascript",
 						"exec": [
 							""

@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.couponsystem.CouponSystemSpring.beans.Customer;
 import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -126,13 +128,13 @@ public class AdminController {
 	}
 
 	@DeleteMapping("/deletecompany")
-	public ResponseEntity<?> deleteCompany(@RequestBody Company company, @RequestParam(name = "token") UUID token) {
+	public ResponseEntity<?> deleteCompany(@RequestParam(name = "id") long id, @RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
-		Optional<Company> existingCompany = systemDAO.findCompanyById(company.getId());
-		long id = company.getId();
-		if (company.getId() > 0 && existingCompany.isPresent()) {
+		Optional<Company> existingCompany = systemDAO.findCompanyById(id);
+		
+		if (id > 0 && existingCompany.isPresent()) {
 
 			ArrayList<Coupon> coupons = systemDAO.findCouponsByCompanyId(id);
 			ArrayList<Customer> customers = (ArrayList<Customer>) systemDAO.getAllCustomers();
@@ -149,12 +151,12 @@ public class AdminController {
 
 			}
 
-			systemDAO.deleteCompany(company);
+			systemDAO.deleteCompany(systemDAO.findCompanyById(id).get());
 			for (Coupon coupon : coupons) {
 
 				systemDAO.deleteCoupon(coupon);
 			}
-			existingCompany = systemDAO.findCompanyById(company.getId());
+			existingCompany = systemDAO.findCompanyById(id);
 			if (!existingCompany.isPresent()) {
 				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Company (id=" + id + ") was deleted", HttpStatus.OK);

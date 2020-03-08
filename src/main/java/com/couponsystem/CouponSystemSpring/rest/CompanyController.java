@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
 import com.fasterxml.jackson.core.sym.Name;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/company")
 
 public class CompanyController {
@@ -89,6 +91,10 @@ public class CompanyController {
 
 	@DeleteMapping("/deletecoupon")
 	public ResponseEntity<?> deleteCoupon(@RequestBody Coupon coupon, @RequestParam(name = "token") UUID token) {
+		if (systemDAO.findCouponById(coupon.getId()).isEmpty()) {
+			return new ResponseEntity<String>("No such coupon", HttpStatus.NOT_FOUND);
+		}
+
 		Optional<Coupon> existingCoupon = systemDAO.findCouponById(coupon.getId());
 		if (!help.allowed(token, existingCoupon.get().getCompanyId())) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);

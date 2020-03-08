@@ -31,7 +31,7 @@ public class ScheduledCleanUp {
 	AdminController adminController;
 
 	@Async
-	@Scheduled(fixedRate = 1000*60)
+	@Scheduled(fixedRate = 1000*60*30)
 	public void cleanUp() throws InterruptedException {
 		
 		for (Login login : loginDAO.getAllLogins()) {
