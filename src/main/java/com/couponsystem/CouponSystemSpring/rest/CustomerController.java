@@ -69,7 +69,7 @@ public class CustomerController {
 				return new ResponseEntity<String>("The coupon expired.", HttpStatus.EXPECTATION_FAILED);
 			}
 			help.updateTimestamp(token);
-			return new ResponseEntity<String>("You are too late. Nothing left.", HttpStatus.I_AM_A_TEAPOT);
+			return new ResponseEntity<String>("You are too late. Nothing left.", HttpStatus.GONE);
 		}
 		help.updateTimestamp(token);
 		return new ResponseEntity<String>("No such coupon", HttpStatus.BAD_REQUEST);
@@ -147,4 +147,15 @@ public class CustomerController {
 		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Customer with id " + id + " not found.", HttpStatus.BAD_REQUEST);
 	}
+
+	@GetMapping("/getallcoupons")
+	public ResponseEntity<?> getAllCouponsEntity(@RequestParam(name = "id") long id,
+			@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, id)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
+		return new ResponseEntity<ArrayList<Coupon>>((ArrayList<Coupon>) systemDAO.getAllCoupons(), HttpStatus.OK);
+	}
+
 }

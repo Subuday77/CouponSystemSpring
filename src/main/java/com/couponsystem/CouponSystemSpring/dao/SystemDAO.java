@@ -2,6 +2,7 @@ package com.couponsystem.CouponSystemSpring.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,25 +34,22 @@ public class SystemDAO {
 		return companyRepo.findById(id);
 	}
 
-
 	public Optional<Company> findCompanyByName(String name) {
 		return companyRepo.findByName(name);
 	}
 
-	
 	public Optional<Company> findCompanyByEmailOptional(String email) {
 		return companyRepo.findByEmail(email);
 	}
-	
-	public Optional<Company> findCompanyByString(String name, String email, String uid) {
-		
-		return companyRepo.findByNameOrEmailOrUid(name, email, uid);
+
+	public Optional<List<Company>> findCompanyByString(long id, String name, String email, String uid) {
+
+		return companyRepo.findByIdOrNameOrEmailOrUid(id, name, email, uid);
 	}
 
 	public void deleteCompany(Company company) {
 		companyRepo.delete(company);
 	}
-
 
 	public Collection<Company> getAllCompanies() {
 		return companyRepo.findAll();
@@ -69,8 +67,7 @@ public class SystemDAO {
 	public Optional<Coupon> findCouponById(long id) {
 		return couponRepo.findById(id);
 	}
-	
-	
+
 	public Optional<Coupon> findCouponByUid(String uid) {
 		return couponRepo.findByUid(uid);
 	}
@@ -86,16 +83,19 @@ public class SystemDAO {
 	public Collection<Coupon> getAllCoupons() {
 		return couponRepo.findAll();
 	}
-	
-	public Collection<Coupon> findCouponsByCategoryAndCompanyId (Category category, long companyId) {
+
+	public Collection<Coupon> findCouponsByCategoryAndCompanyId(Category category, long companyId) {
 		return couponRepo.findByCategoryAndCompanyId(category, companyId);
 	}
-	
-	public Collection<Coupon> findCouponsByPriceAndCompanyId (double price, long companyId){
+
+	public Collection<Coupon> findCouponsByPriceAndCompanyId(double price, long companyId) {
 		return couponRepo.findByPriceLessThanEqualAndCompanyId(price, companyId);
 	}
-	
-	
+
+	public Collection<Coupon> findCouponsByPriceAndCategoryAndCompanyId(double price, Category category,
+			long companyId) {
+		return couponRepo.findByPriceLessThanEqualAndCategoryAndCompanyId(price, category, companyId);
+	}
 
 	// Customer
 	public void addCustomer(Customer customer) {
@@ -122,14 +122,11 @@ public class SystemDAO {
 		return customerRepo.findAll();
 	}
 
-	public ArrayList<Customer> findCustomerByString(String firstName, String lastName, String email, String uid) {
-		
-		return (ArrayList<Customer>) customerRepo.findByFirstNameOrLastNameOrEmailOrUid (firstName, lastName,  email,  uid);
+	public ArrayList<Customer> findCustomerByString(long id, String firstName, String lastName, String email,
+			String uid) {
+
+		return (ArrayList<Customer>) customerRepo.findByIdOrFirstNameOrLastNameOrEmailOrUid(id, firstName, lastName,
+				email, uid);
 	}
-
-	
-
-	
-	
 
 }

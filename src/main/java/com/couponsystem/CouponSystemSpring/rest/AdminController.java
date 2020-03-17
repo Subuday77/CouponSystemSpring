@@ -24,6 +24,7 @@ import com.couponsystem.CouponSystemSpring.beans.Company;
 import com.couponsystem.CouponSystemSpring.beans.Coupon;
 import com.couponsystem.CouponSystemSpring.beans.Customer;
 import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -68,22 +69,32 @@ public class AdminController {
 	}
 
 	@GetMapping("/getcompany")
-	public ResponseEntity<?> findCompanyByString(@RequestParam(name = "name") String name,
-			@RequestParam(name = "email") String email, @RequestParam(name = "uid") String uid, @RequestParam(name = "token") UUID token) {
+	public ResponseEntity<?> findCompanyByString(@RequestParam(name = "id") String id,
+			@RequestParam(name = "name") String name, @RequestParam(name = "email") String email,
+			@RequestParam(name = "uid") String uid, @RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
-		Optional<Company> existingCompany = systemDAO.findCompanyByString(name, email, uid);
+		long i;
+		try {
+			i = Long.parseLong(id);
+		} catch (Exception e) {
+			i = 0;
+		}
+
+		Optional<List<Company>> existingCompany = systemDAO.findCompanyByString(i, name, email, uid);
 		if (existingCompany.isPresent()) {
 			help.updateTimestamp(token);
-			return new ResponseEntity<Company>(systemDAO.findCompanyByString(name, email, uid).get(), HttpStatus.OK);
+			return new ResponseEntity<List<Company>>(systemDAO.findCompanyByString(i, name, email, uid).get(),
+					HttpStatus.OK);
 		}
 		help.updateTimestamp(token);
-		return new ResponseEntity<String>("Company not found.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<List<Company>>(HttpStatus.OK);
 	}
 
 	@GetMapping("/name")
-	public ResponseEntity<?> findCompanyByName(@RequestParam(name = "name") String name, @RequestParam(name = "token") UUID token) {
+	public ResponseEntity<?> findCompanyByName(@RequestParam(name = "name") String name,
+			@RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
@@ -128,12 +139,13 @@ public class AdminController {
 	}
 
 	@DeleteMapping("/deletecompany")
-	public ResponseEntity<?> deleteCompany(@RequestParam(name = "id") long id, @RequestParam(name = "token") UUID token) {
+	public ResponseEntity<?> deleteCompany(@RequestParam(name = "id") long id,
+			@RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
 		Optional<Company> existingCompany = systemDAO.findCompanyById(id);
-		
+
 		if (id > 0 && existingCompany.isPresent()) {
 
 			ArrayList<Coupon> coupons = systemDAO.findCouponsByCompanyId(id);
@@ -169,7 +181,8 @@ public class AdminController {
 	// Customers
 
 	@GetMapping("/getcustomerbyid")
-	public ResponseEntity<?> findCustomerById(@RequestParam(name = "id") long id, @RequestParam(name = "token") UUID token) {
+	public ResponseEntity<?> findCustomerById(@RequestParam(name = "id") long id,
+			@RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
@@ -183,20 +196,29 @@ public class AdminController {
 	}
 
 	@GetMapping("/getcustomers")
-	public ResponseEntity<?> findCustomersByString(@RequestParam(name = "firstname") String firstName,
-			@RequestParam(name = "lastname") String lastName, @RequestParam(name = "email") String email,
-			@RequestParam(name = "uid") String uid, @RequestParam(name = "token") UUID token) {
+	public ResponseEntity<?> findCustomersByString(@RequestParam(name = "id") String id,
+			@RequestParam(name = "firstname") String firstName, @RequestParam(name = "lastname") String lastName,
+			@RequestParam(name = "email") String email, @RequestParam(name = "uid") String uid,
+			@RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
-		ArrayList<Customer> existingCustomers = systemDAO.findCustomerByString(firstName, lastName, email, uid);
+
+		long i;
+		try {
+			i = Long.parseLong(id);
+		} catch (Exception e) {
+			i = 0;
+		}
+
+		ArrayList<Customer> existingCustomers = systemDAO.findCustomerByString(i, firstName, lastName, email, uid);
 		if (!existingCustomers.isEmpty()) {
 			help.updateTimestamp(token);
 			return new ResponseEntity<ArrayList<Customer>>(
-					systemDAO.findCustomerByString(firstName, lastName, email, uid), HttpStatus.OK);
+					systemDAO.findCustomerByString(i, firstName, lastName, email, uid), HttpStatus.OK);
 		}
 		help.updateTimestamp(token);
-		return new ResponseEntity<String>("Customer(s) not found.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<List<Customer>>(HttpStatus.OK);
 	}
 
 	@GetMapping("/getallcustomers")
@@ -245,15 +267,16 @@ public class AdminController {
 	}
 
 	@DeleteMapping("/deletecustomer")
-	public ResponseEntity<?> deleteCustomer(@RequestBody Customer customer, @RequestParam(name = "token") UUID token) {
+	public ResponseEntity<?> deleteCustomer(@RequestParam(name = "id") long id,
+			@RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
-		Optional<Customer> existingCustomer = systemDAO.findCustomerById(customer.getId());
-		long id = customer.getId();
-		if (customer.getId() > 0 && existingCustomer.isPresent()) {
-			systemDAO.deleteCustomer(customer);
-			existingCustomer = systemDAO.findCustomerById(customer.getId());
+		Optional<Customer> existingCustomer = systemDAO.findCustomerById(id);
+
+		if (id > 0 && existingCustomer.isPresent()) {
+			systemDAO.deleteCustomer(systemDAO.findCustomerById(id).get());
+			existingCustomer = systemDAO.findCustomerById(id);
 			if (existingCustomer.isEmpty()) {
 				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Customer(id=" + id + ") was deleted", HttpStatus.OK);
@@ -264,18 +287,10 @@ public class AdminController {
 	}
 
 	// Coupons
-	@GetMapping("/getallcoupons")
-	public ResponseEntity<?> getAllCouponsEntity(@RequestParam(name = "token") UUID token) {
-		if (!help.allowed(token, 0)) {
-			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
-		}
-		help.updateTimestamp(token);
-		return new ResponseEntity<ArrayList<Coupon>>((ArrayList<Coupon>) systemDAO.getAllCoupons(), HttpStatus.OK);
-	}
 
 	@DeleteMapping("/cleanup")
 	public synchronized ResponseEntity<?> deleteOutdatedCoupons(@RequestParam(name = "token") UUID token) {
-		
+
 		if (!help.allowed(token, 0)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}

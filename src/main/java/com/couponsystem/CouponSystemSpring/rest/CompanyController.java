@@ -25,6 +25,8 @@ import com.couponsystem.CouponSystemSpring.beans.Customer;
 import com.couponsystem.CouponSystemSpring.dao.SystemDAO;
 import com.fasterxml.jackson.core.sym.Name;
 
+import net.bytebuddy.dynamic.loading.PackageDefinitionStrategy.Definition.Undefined;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/company")
@@ -90,17 +92,17 @@ public class CompanyController {
 	}
 
 	@DeleteMapping("/deletecoupon")
-	public ResponseEntity<?> deleteCoupon(@RequestBody Coupon coupon, @RequestParam(name = "token") UUID token) {
-		if (systemDAO.findCouponById(coupon.getId()).isEmpty()) {
+	public ResponseEntity<?> deleteCoupon(@RequestParam long id, @RequestParam(name = "token") UUID token) {
+		if (systemDAO.findCouponById(id).isEmpty()) {
 			return new ResponseEntity<String>("No such coupon", HttpStatus.NOT_FOUND);
 		}
 
-		Optional<Coupon> existingCoupon = systemDAO.findCouponById(coupon.getId());
+		Optional<Coupon> existingCoupon = systemDAO.findCouponById(id);
 		if (!help.allowed(token, existingCoupon.get().getCompanyId())) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
 		}
-		long id = coupon.getId();
-		if (coupon.getId() > 0 && existingCoupon.isPresent()) {
+
+		if (id > 0 && existingCoupon.isPresent()) {
 			Optional<Company> company = systemDAO.findCompanyById(existingCoupon.get().getCompanyId());
 			if (company.isPresent()) {
 				company.get().getCoupons().remove(existingCoupon.get());
@@ -112,8 +114,8 @@ public class CompanyController {
 				}
 
 			}
-			systemDAO.deleteCoupon(coupon);
-			existingCoupon = systemDAO.findCouponById(coupon.getId());
+			systemDAO.deleteCoupon(systemDAO.findCouponById(id).get());
+			existingCoupon = systemDAO.findCouponById(id);
 			if (existingCoupon.isEmpty()) {
 				help.updateTimestamp(token);
 				return new ResponseEntity<String>("Coupon (id=" + id + ") was deleted", HttpStatus.OK);
@@ -145,6 +147,27 @@ public class CompanyController {
 		return new ResponseEntity<ArrayList<Coupon>>(
 				(ArrayList<Coupon>) systemDAO.findCouponsByPriceAndCompanyId(price, companyId), HttpStatus.OK);
 
+	}
+
+	@GetMapping("/findcouponsbypriceandcategory")
+	public ResponseEntity<?> getCompanyCouponsByPriceAndCategory(@RequestParam(name = "price") double price,
+			@RequestParam(name = "category") Category category, @RequestParam(name = "companyid") long companyId,
+			@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, companyId)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
+		if (category == null) {
+			return new ResponseEntity<ArrayList<Coupon>>(
+					(ArrayList<Coupon>) systemDAO.findCouponsByPriceAndCompanyId(price, companyId), HttpStatus.OK);
+		}
+		if (price <= 0) {
+			return new ResponseEntity<ArrayList<Coupon>>(
+					(ArrayList<Coupon>) systemDAO.findCouponsByCategoryAndCompanyId(category, companyId), HttpStatus.OK);
+		}
+		return new ResponseEntity<ArrayList<Coupon>>(
+				(ArrayList<Coupon>) systemDAO.findCouponsByPriceAndCategoryAndCompanyId(price, category, companyId),
+				HttpStatus.OK);
 	}
 
 	@GetMapping("/getcompanybyid")

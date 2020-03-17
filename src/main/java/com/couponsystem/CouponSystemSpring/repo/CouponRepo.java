@@ -18,20 +18,9 @@ public interface CouponRepo extends JpaRepository<Coupon, Long>{
 	List <Coupon> findByCompanyId (long id);
 	List <Coupon> findByCategoryAndCompanyId (Category category, long companyId);
 	List <Coupon> findByPriceLessThanEqualAndCompanyId (double price, long companyId);
+	List <Coupon> findByPriceLessThanEqualAndCategoryAndCompanyId (double price, Category category, long companyId);
 	
-	
-//	@Query
-//	("DELETE FROM companies_coupons WHERE coupons_id=?1")
-//	@Modifying
-//	void deleteFromCompanies_coupons (long id);
-//	@Query
-//	("DELETE FROM customers_coupons WHERE coupons_id=?1")
-//	@Modifying
-//	void deleteFromCustomers_coupons (long id);
-//	@Query
-//	("DELETE FROM coupons WHERE id=?1")
-//	@Modifying
-//	void deleteFromCoupons (long id);
+
 	
 }
 

@@ -14,6 +14,6 @@ public interface CustomerRepo extends JpaRepository<Customer, Long> {
 	
 	Optional<Customer> findByUid (String uid);
 	Optional <Customer> findByEmail (String email); 
-	Collection<Customer> findByFirstNameOrLastNameOrEmailOrUid (String firstName, String lastName, String email, String uid);
+	Collection<Customer> findByIdOrFirstNameOrLastNameOrEmailOrUid (Long id, String firstName, String lastName, String email, String uid);
 
 }
