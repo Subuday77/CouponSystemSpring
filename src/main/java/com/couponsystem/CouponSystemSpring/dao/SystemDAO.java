@@ -96,6 +96,18 @@ public class SystemDAO {
 			long companyId) {
 		return couponRepo.findByPriceLessThanEqualAndCategoryAndCompanyId(price, category, companyId);
 	}
+	
+	public Collection<Coupon> findByPriceAndCategory(double price, Category category){
+		return couponRepo.findByPriceLessThanEqualAndCategory(price, category);
+	}
+	
+	public Collection<Coupon> findByPrice(double price){
+		return couponRepo.findByPriceLessThanEqual(price);
+	}
+	
+	public Collection<Coupon> findByCategory(Category category){
+		return couponRepo.findByCategory(category);
+	}
 
 	// Customer
 	public void addCustomer(Customer customer) {

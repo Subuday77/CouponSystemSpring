@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.naming.spi.DirStateFactory.Result;
 import javax.print.DocFlavor.STRING;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class CustomerController {
 	}
 
 	@GetMapping("/getcouponsbycategory")
-	public ResponseEntity<?> findCouponsByCategoryEntity(@RequestParam(name = "id") long id,
+	public ResponseEntity<?> findCouponsByCategory(@RequestParam(name = "id") long id,
 			@RequestParam(name = "category") Category category, @RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, id)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
@@ -111,7 +112,7 @@ public class CustomerController {
 	}
 
 	@GetMapping("/getcouponsbyprice")
-	public ResponseEntity<?> findCouponsByCategoryEntity(@RequestParam(name = "id") long id,
+	public ResponseEntity<?> findCouponsByPrice(@RequestParam(name = "id") long id,
 			@RequestParam(name = "price") double price, @RequestParam(name = "token") UUID token) {
 		if (!help.allowed(token, id)) {
 			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
@@ -131,6 +132,96 @@ public class CustomerController {
 		}
 		help.updateTimestamp(token);
 		return new ResponseEntity<String>("There are no purchased coupons in this bounds", HttpStatus.OK);
+	}
+
+	@GetMapping("/findcouponsbypriceandcategory")
+	public ResponseEntity<?> getCustomerCouponsByPriceAndCategory(@RequestParam(name = "id") long id,
+			@RequestParam(name = "price") double price, @RequestParam(name = "category") Category category,
+			@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, id)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		if (category == null && price <= 0) {
+			help.updateTimestamp(token);
+			return new ResponseEntity<List<Coupon>>((List<Coupon>) systemDAO.findCustomerById(id).get().getCoupons(),
+					HttpStatus.OK);
+		}
+
+		if (category == Category.undefined) {
+			List<Coupon> coupons = (List<Coupon>) systemDAO.findCustomerById(id).get().getCoupons();
+			ArrayList<Coupon> result = new ArrayList<Coupon>();
+
+			for (Coupon coupon : coupons) {
+				if (coupon.getPrice() <= price) {
+					result.add(coupon);
+				}
+			}
+			if (result.size() > 0) {
+				help.updateTimestamp(token);
+				return new ResponseEntity<ArrayList<Coupon>>(result, HttpStatus.OK);
+
+			}
+			help.updateTimestamp(token);
+			return new ResponseEntity<String>("There are no purchased coupons in this bounds", HttpStatus.OK);
+
+		}
+		if (price <= 0) {
+			List<Coupon> coupons = (List<Coupon>) systemDAO.findCustomerById(id).get().getCoupons();
+			ArrayList<Coupon> result = new ArrayList<Coupon>();
+
+			for (Coupon coupon : coupons) {
+				if (coupon.getCategory().equals(category)) {
+					result.add(coupon);
+				}
+			}
+			if (result.size() > 0) {
+				help.updateTimestamp(token);
+				return new ResponseEntity<ArrayList<Coupon>>(result, HttpStatus.OK);
+
+			}
+			help.updateTimestamp(token);
+			return new ResponseEntity<String>("There are no purchased coupons in this category", HttpStatus.OK);
+		}
+
+		ArrayList<Coupon> allCoupons = (ArrayList<Coupon>) systemDAO.findByPriceAndCategory(price, category);
+		ArrayList<Coupon> result = new ArrayList<Coupon>();
+		List<Coupon> coupons = (List<Coupon>) systemDAO.findCustomerById(id).get().getCoupons();
+		for (Coupon coupon : allCoupons) {
+			for (Coupon c : coupons) {
+				if (coupon.equals(c)) {
+					result.add(c);
+				}
+			}
+		}
+		help.updateTimestamp(token);
+		return new ResponseEntity<ArrayList<Coupon>>(result, HttpStatus.OK);
+	}
+
+	@GetMapping("/findallcouponsbypriceandcategory")
+	public ResponseEntity<?> getCouponsByPriceAndCategory(@RequestParam(name = "id") long id,
+			@RequestParam(name = "price") double price, @RequestParam(name = "category") Category category,
+			@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, id)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		if (category == Category.undefined && price <= 0) {
+			help.updateTimestamp(token);
+			return new ResponseEntity<ArrayList<Coupon>>((ArrayList<Coupon>) systemDAO.getAllCoupons(), HttpStatus.OK);
+		}
+		if (category == Category.undefined) {
+			help.updateTimestamp(token);
+			return new ResponseEntity<ArrayList<Coupon>>((ArrayList<Coupon>) systemDAO.findByPrice(price),
+					HttpStatus.OK);
+		}
+		if (price <= 0) {
+			help.updateTimestamp(token);
+			return new ResponseEntity<ArrayList<Coupon>>((ArrayList<Coupon>) systemDAO.findByCategory(category),
+					HttpStatus.OK);
+		}
+
+		help.updateTimestamp(token);
+		return new ResponseEntity<ArrayList<Coupon>>(
+				(ArrayList<Coupon>) systemDAO.findByPriceAndCategory(price, category), HttpStatus.OK);
 	}
 
 	@GetMapping("/getcustomerbyid")

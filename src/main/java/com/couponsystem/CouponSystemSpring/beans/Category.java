@@ -4,10 +4,12 @@ import javax.persistence.Id;
 
 
 public enum Category {
+	
 	Food,
 	Electricity,
 	Restaurant,
-	Vacation;
+	Vacation,
+	undefined;
 	private long id;
 	
 	@Id

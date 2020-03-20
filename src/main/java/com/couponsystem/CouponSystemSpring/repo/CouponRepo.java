@@ -17,9 +17,11 @@ public interface CouponRepo extends JpaRepository<Coupon, Long>{
 	Optional<Coupon> findByUid (String uid);
 	List <Coupon> findByCompanyId (long id);
 	List <Coupon> findByCategoryAndCompanyId (Category category, long companyId);
+	List <Coupon> findByCategory (Category category);
+	List <Coupon> findByPriceLessThanEqual (double price);
 	List <Coupon> findByPriceLessThanEqualAndCompanyId (double price, long companyId);
 	List <Coupon> findByPriceLessThanEqualAndCategoryAndCompanyId (double price, Category category, long companyId);
-	
+	List <Coupon> findByPriceLessThanEqualAndCategory (double price, Category category);
 
 	
 }
