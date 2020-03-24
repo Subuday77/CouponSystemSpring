@@ -69,6 +69,16 @@ public class CompanyController {
 		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Coupon>>(systemDAO.findCouponsByCompanyId(id), HttpStatus.OK);
 	}
+	@GetMapping("/findcouponbyid")
+	public ResponseEntity<?> getCouponById(@RequestParam(name = "id") long id, @RequestParam(name = "companyid") long companyid,
+			@RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, companyid)) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		help.updateTimestamp(token);
+		return new ResponseEntity <Optional<Coupon>> (systemDAO.findCouponById(id), HttpStatus.OK);
+	}
+	
 
 	@PutMapping("/updatecoupon")
 	public ResponseEntity<?> updateCoupon(@RequestBody Coupon coupon, @RequestParam(name = "token") UUID token) {
@@ -163,7 +173,8 @@ public class CompanyController {
 		}
 		if (price <= 0) {
 			return new ResponseEntity<ArrayList<Coupon>>(
-					(ArrayList<Coupon>) systemDAO.findCouponsByCategoryAndCompanyId(category, companyId), HttpStatus.OK);
+					(ArrayList<Coupon>) systemDAO.findCouponsByCategoryAndCompanyId(category, companyId),
+					HttpStatus.OK);
 		}
 		return new ResponseEntity<ArrayList<Coupon>>(
 				(ArrayList<Coupon>) systemDAO.findCouponsByPriceAndCategoryAndCompanyId(price, category, companyId),
@@ -183,5 +194,27 @@ public class CompanyController {
 		}
 		help.updateTimestamp(token);
 		return new ResponseEntity<String>("Company with id " + id + " not found.", HttpStatus.BAD_REQUEST);
+	}
+
+	@PutMapping("/updatecompany")
+	public ResponseEntity<?> updateCompany(@RequestBody Company company, 
+			@RequestParam(name = "token") UUID token) {
+		Optional<Company> existingCompany = systemDAO.findCompanyById(company.getId());
+		if (!help.allowed(token, existingCompany.get().getId())) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		if (existingCompany.isPresent()) {
+			if (help.isUnique(company)) {
+				systemDAO.addCompany(Help.compareFieldsCompany(existingCompany, company));
+				help.updateTimestamp(token);
+				return new ResponseEntity<String>(
+						"Company " + existingCompany.get().getName() + " (id=" + company.getId() + ")" + " updated",
+						HttpStatus.OK);
+			}
+			help.updateTimestamp(token);
+			return new ResponseEntity<String>("Name or Email already in use", HttpStatus.IM_USED);
+		}
+		help.updateTimestamp(token);
+		return new ResponseEntity<String>("Company with id " + company.getId() + " not found.", HttpStatus.BAD_REQUEST);
 	}
 }

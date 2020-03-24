@@ -54,7 +54,7 @@ public class Help {
 
 				case "name":
 
-					if (field.get(company) == null) {
+					if (field.get(company) == null || field.get(company) == "undefined" || field.get(company) == "") {
 
 						tempCompany.setName(existingCompany.get().getName());
 
@@ -64,7 +64,7 @@ public class Help {
 					break;
 
 				case "email":
-					if (field.get(company) == null) {
+					if (field.get(company) == null || field.get(company) == "undefined" || field.get(company) == "") {
 						tempCompany.setEmail(existingCompany.get().getEmail());
 					} else {
 						tempCompany.setEmail(company.getEmail());
@@ -72,7 +72,7 @@ public class Help {
 					break;
 
 				case "password":
-					if (field.get(company) == null) {
+					if (field.get(company) == null || field.get(company) == "undefined" || field.get(company) == "") {
 						tempCompany.setPassword(existingCompany.get().getPassword());
 					} else {
 						tempCompany.setPassword(company.getPassword());
@@ -121,7 +121,7 @@ public class Help {
 
 				case "firstName":
 
-					if (field.get(customer) == null) {
+					if (field.get(customer) == null || field.get(customer) == "undefined" || field.get(customer) == "") {
 
 						tempCustomer.setFirstName(existingCustomer.get().getFirstName());
 
@@ -132,7 +132,7 @@ public class Help {
 
 				case "lastName":
 
-					if (field.get(customer) == null) {
+					if (field.get(customer) == null || field.get(customer) == "undefined" || field.get(customer) == "") {
 
 						tempCustomer.setLastName(existingCustomer.get().getLastName());
 
@@ -142,7 +142,7 @@ public class Help {
 					break;
 
 				case "email":
-					if (field.get(customer) == null) {
+					if (field.get(customer) == null || field.get(customer) == "undefined" || field.get(customer) == "") {
 						tempCustomer.setEmail(existingCustomer.get().getEmail());
 					} else {
 						tempCustomer.setEmail(customer.getEmail());
@@ -150,7 +150,7 @@ public class Help {
 					break;
 
 				case "password":
-					if (field.get(customer) == null) {
+					if (field.get(customer) == null || field.get(customer) == "undefined" || field.get(customer) == "") {
 						tempCustomer.setPassword(existingCustomer.get().getPassword());
 					} else {
 						tempCustomer.setPassword(customer.getPassword());
@@ -205,7 +205,7 @@ public class Help {
 
 				case "title":
 
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == "") {
 
 						tempCoupon.setTitle(existingCoupon.get().getTitle());
 
@@ -216,7 +216,7 @@ public class Help {
 
 				case "description":
 
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == "") {
 
 						tempCoupon.setDescription(existingCoupon.get().getDescription());
 
@@ -226,7 +226,7 @@ public class Help {
 					break;
 
 				case "startDate":
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == "") {
 
 						tempCoupon.setStartDate(existingCoupon.get().getStartDate());
 
@@ -235,7 +235,7 @@ public class Help {
 					}
 					break;
 				case "endDate":
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == "") {
 
 						tempCoupon.setEndDate(existingCoupon.get().getEndDate());
 
@@ -244,7 +244,7 @@ public class Help {
 					}
 					break;
 				case "amount":
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == ""|| field.get(coupon).equals(0)) {
 
 						tempCoupon.setAmount(existingCoupon.get().getAmount());
 
@@ -254,7 +254,7 @@ public class Help {
 					break;
 
 				case "price":
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == "" || field.get(coupon).equals(0.0)) {
 
 						tempCoupon.setPrice(existingCoupon.get().getPrice());
 
@@ -264,7 +264,7 @@ public class Help {
 					break;
 
 				case "image":
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == "") {
 
 						tempCoupon.setImage(existingCoupon.get().getImage());
 
@@ -274,7 +274,7 @@ public class Help {
 					break;
 
 				case "category":
-					if (field.get(coupon) == null) {
+					if (field.get(coupon) == null || field.get(coupon) == "undefined" || field.get(coupon) == "") {
 
 						tempCoupon.setCategory(existingCoupon.get().getCategory());
 

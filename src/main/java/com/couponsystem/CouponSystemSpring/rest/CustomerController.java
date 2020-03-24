@@ -248,5 +248,25 @@ public class CustomerController {
 		help.updateTimestamp(token);
 		return new ResponseEntity<ArrayList<Coupon>>((ArrayList<Coupon>) systemDAO.getAllCoupons(), HttpStatus.OK);
 	}
+	@PutMapping("/updatecustomer")
+	public ResponseEntity<?> updateCustomer(@RequestBody Customer customer, @RequestParam(name = "token") UUID token) {
+		if (!help.allowed(token, customer.getId())) {
+			return new ResponseEntity<String>("Forbidden!", HttpStatus.FORBIDDEN);
+		}
+		Optional<Customer> existingCustomer = systemDAO.findCustomerById(customer.getId());
+		if (existingCustomer.isPresent()) {
+			if (help.isUnique(customer)) {
+				systemDAO.addCustomer(Help.compareFieldsCustomer(existingCustomer, customer));
+				help.updateTimestamp(token);
+				return new ResponseEntity<String>("Customer " + existingCustomer.get().getLastName() + " (id="
+						+ customer.getId() + ")" + " updated", HttpStatus.OK);
+			}
+			help.updateTimestamp(token);
+			return new ResponseEntity<String>("Email already in use", HttpStatus.IM_USED);
+		}
+		help.updateTimestamp(token);
+		return new ResponseEntity<String>("Customer with id " + customer.getId() + " not found.",
+				HttpStatus.BAD_REQUEST);
+	}
 
 }
